@@ -11,8 +11,8 @@ input_file = path.join(this_dir, "input.txt")
 
 def get_parts(row):
     row = row.strip()
-    count, char, password = row.split()
-    first_pos, last_pos = count.split('-')
+    indexes, char, password = row.split()
+    first_pos, last_pos = indexes.split('-')
     return int(first_pos) - 1, int(last_pos) - 1, char[:-1], password
 
 def check_compliance(row):
