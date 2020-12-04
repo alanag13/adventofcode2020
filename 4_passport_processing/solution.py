@@ -35,9 +35,6 @@ def part_one_check_validity(fields):
     return (len(fields) >= 8 or (len(fields) == 7 and "cid" not in fields))
 
 def part_two_check_validity(fields):
-    if not part_one_check_validity(fields):
-        return False
-
     hgt_field = fields["hcl"]
     pid_field = fields["pid"]
 
@@ -57,15 +54,19 @@ with open(input_file) as f:
     for entry in f:
         entry = entry.strip()
         if not entry:
-            part_one_valid_passports += part_one_check_validity(fields)
-            part_two_valid_passports += part_two_check_validity(fields)
+            part_one_valid = part_one_check_validity(fields)
+            if part_one_valid:
+                part_one_valid_passports += 1
+                part_two_valid_passports += part_two_check_validity(fields)
             fields = {}
             continue
         fields.update({pair.split(":")[0]: pair.split(":")[1] for pair in entry.split()})
     
     # check if the very last entry was valid
-    part_one_valid_passports += part_one_check_validity(fields)
-    part_two_valid_passports += part_two_check_validity(fields)
+    part_one_valid = part_one_check_validity(fields)
+    if part_one_valid:
+        part_one_valid_passports += 1
+        part_two_valid_passports += part_two_check_validity(fields)
 
     print(f"Part one: {part_one_valid_passports}")
     print(f"Part two: {part_two_valid_passports}")
