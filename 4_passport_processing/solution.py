@@ -49,9 +49,6 @@ def part_two_check_validity(fields):
         and fields["ecl"] in {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"} \
         and len(pid_field) == 9 and pid_field.isdigit()
 
-def check_validity(fields):
-    return part_one_check_validity(fields), part_two_check_validity(fields)
-
 with open(input_file) as f:
     fields = {}
     part_one_valid_passports = 0
@@ -60,17 +57,15 @@ with open(input_file) as f:
     for entry in f:
         entry = entry.strip()
         if not entry:
-            one, two = check_validity(fields)
-            part_one_valid_passports += one
-            part_two_valid_passports += two
+            part_one_valid_passports += part_one_check_validity(fields)
+            part_two_valid_passports += part_two_check_validity(fields)
             fields = {}
             continue
         fields.update({pair.split(":")[0]: pair.split(":")[1] for pair in entry.split()})
     
     # check if the very last entry was valid
-    one, two = check_validity(fields)
-    part_one_valid_passports += one
-    part_two_valid_passports += two
+    part_one_valid_passports += part_one_check_validity(fields)
+    part_two_valid_passports += part_two_check_validity(fields)
 
     print(f"Part one: {part_one_valid_passports}")
     print(f"Part two: {part_two_valid_passports}")
