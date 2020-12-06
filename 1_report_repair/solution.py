@@ -29,4 +29,7 @@ with open(input_file) as f:
             first, second, third = triple
             print(f"Part two: {first * second * third}")
 
+        if pair and triple:
+            break
+
         checked.add(entry)

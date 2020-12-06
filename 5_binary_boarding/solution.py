@@ -14,18 +14,22 @@ def get_seat_from_boarding_pass(boarding_pass):
 with open(input_file) as f:
     max_seat_id = 0
     my_seat_id = None
-    seats = {get_seat_from_boarding_pass(entry.strip()) for entry in f}
-    for row in range(128):
-        for col in range(8):
-            seat_id = get_seat(row, col)
-            if seat_id > max_seat_id and seat_id in seats:
-                max_seat_id = seat_id
-
-            if not my_seat_id \
-                and seat_id not in seats \
-                and seat_id - 1 in seats \
-                and seat_id + 1 in seats:
-                    my_seat_id = seat_id
+    seats = set()
+    max_seat_id = None
+    min_seat_id = None
+    seat_id_sum = 0
+    for entry in f:
+        entry = entry.strip()
+        seat_id = get_seat_from_boarding_pass(entry)
+        if max_seat_id is None or seat_id > max_seat_id:
+            max_seat_id = seat_id
+        if min_seat_id is None or seat_id < min_seat_id:
+            min_seat_id = seat_id
+        seats.add(seat_id)
+        seat_id_sum += seat_id
+    
+    range_sum = sum(range(min_seat_id, max_seat_id + 1))
+    my_seat_id = range_sum - seat_id_sum
     
     print(f"Part one: {max_seat_id}")
     print(f"Part two: {my_seat_id}")
