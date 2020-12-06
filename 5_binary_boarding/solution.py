@@ -12,7 +12,6 @@ def get_seat_from_boarding_pass(boarding_pass):
     return get_seat(row, col)
 
 with open(input_file) as f:
-    max_seat_id = 0
     my_seat_id = None
     seats = set()
     max_seat_id = None
