@@ -28,20 +28,19 @@ with open(input_file) as f:
         rule = entry.split(" contain ")
         bag = rule[0].rstrip('s')
         contents = rule[1].rstrip('. ').split(', ')
-        if contents[0] == "no other bags":
-            content = {}
-        else:
-            content = {item.split(" ", 1)[1].rstrip('s'): int(item.split(" ", 1)[0]) for item in contents}
+        content = {}
+        if not contents[0] == "no other bags":
+            for item in contents:
+                item_parts = item.split(" ", 1)
+                inner_bag = item_parts[1].rstrip('s')
+                content[inner_bag] = int(item_parts[0])
+
+                if not bag_parents_map.get(inner_bag):
+                    bag_parents_map[inner_bag] = set()
+                bag_parents_map[inner_bag].add(bag)
         
         bag_contents_map[bag] = content
-
-        parents = set()
-        for inner_bag in content:
-            if not bag_parents_map.get(inner_bag):
-                bag_parents_map[inner_bag] = set()
-            bag_parents_map[inner_bag].add(bag)
         
-
 parent_bags_result = set()
 get_parent_bags("shiny gold bag", parent_bags_result)
 
