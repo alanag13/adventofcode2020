@@ -28,17 +28,19 @@ class Driver:
             instruction = self._program[self._line_num]
             prev_accumulator = self._accumulator
             prev_line_num = self._line_num
-            if instruction[0] == "jmp":
-                finished, accumulator = self.run(["nop", instruction[1]])
-            elif instruction[0] == "nop":
-                finished, accumulator = self.run(["jmp", instruction[1]])
+            cmd = instruction[0]
+            param = instruction[1]
+            if cmd == "jmp":
+                finished, accumulator = self.run(["nop", param])
+            elif cmd == "nop":
+                finished, accumulator = self.run(["jmp", param])
 
-            if instruction[0] == "jmp" or instruction[0] == "nop":
+            if cmd == "jmp" or cmd == "nop":
                 self._accumulator = prev_accumulator
                 self._line_num = prev_line_num
 
-            getattr(self, f"_{instruction[0]}")(int(instruction[1]))
-            
+            getattr(self, f"_{cmd}")(int(param))
+
         return accumulator
 
     def _acc(self, increment):
