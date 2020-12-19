@@ -25,7 +25,6 @@ with open(input_file) as f:
         
         if len(contiguous_nums) > 1 and rolling_sum == PART_ONE_SOLUTION:
             print(f"Part two: {min(contiguous_nums) + max(contiguous_nums)}")
-            exit()
 
         contiguous_nums.append(num)
         rolling_sum += num
