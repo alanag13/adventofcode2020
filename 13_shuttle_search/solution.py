@@ -26,7 +26,7 @@ def get_pt_two_timestamp(bus_ids):
         
         # note: this only works because every bus id is prime.
         # If it were not prime we would need to break down the bus id into each of its prime multiples
-        # and then only multiply by them if those multiples hadn't already been used earlier
+        # and then only multiply by them if those multiples haven't already been used earlier
         increase_factor *= bus_id
 
     return current_timestamp
@@ -36,8 +36,7 @@ with open(input_file) as f:
     input_list = [entry.strip() for entry in f]
     pt_one_start_time = int(input_list[0])
     bus_ids = {idx: int(bus_id) for idx, bus_id in enumerate(input_list[1].split(",")) if bus_id != "x"}
-    print(bus_ids)
     bus_id, time = get_pt_one_bus_id_and_time(bus_ids, pt_one_start_time)
     pt_two_time = get_pt_two_timestamp(bus_ids)
-    print(bus_id * (time - pt_one_start_time))
-    print(pt_two_time)
+    print(f"Part one: {bus_id * (time - pt_one_start_time)}")
+    print(f"Part two: {pt_two_time}")
