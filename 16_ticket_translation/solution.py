@@ -37,33 +37,18 @@ def _get_field_map(valid_tickets, rules):
 
 
 with open(input_file) as f:
+    raw = f.read().strip()
+
+    rules_input, your_ticket_input, nearby_tickets_input = [part.split("\n") for part in raw.split("\n\n")]
+
     rules = {}
-    nearby_tickets = []
-    your_ticket = None
-    do_your_ticket = False
-    do_nearby_tickets = False
+    for line in rules_input:
+        rule_parts = line.split(":")
+        rule_ranges = _get_rule_ranges(rule_parts[1])
+        rules[rule_parts[0]] = rule_ranges
 
-    for entry in f:
-        line = entry.strip()
-        if not line:
-            continue
-
-        if entry.startswith("your ticket:"):
-            do_your_ticket = True
-            continue
-        
-        if entry.startswith("nearby tickets:"):
-            do_nearby_tickets = True
-            continue
-
-        if do_nearby_tickets:
-            nearby_tickets.append(line.split(","))
-        elif do_your_ticket:
-            your_ticket = line.split(",")
-        else:
-            rule_parts = line.split(":")
-            rule_ranges = _get_rule_ranges(rule_parts[1])
-            rules[rule_parts[0]] = rule_ranges
+    nearby_tickets = [list(map(int, line.split(","))) for line in nearby_tickets_input[1:]]
+    your_ticket = list(map(int, your_ticket_input[1].split(",")))
 
     invalid_fields = [int(val) for ticket in nearby_tickets
                                for val in ticket if not _is_valid_for_rules(val, rules)]
