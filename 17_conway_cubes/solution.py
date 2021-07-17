@@ -80,5 +80,5 @@ with open(input_file) as f:
         pt_one_conway_game.next_turn()
         pt_two_conway_game.next_turn()
 
-    print(len(pt_one_conway_game.get_active_cubes()))
-    print(len(pt_two_conway_game.get_active_cubes()))
+    print(f"Part one: {len(pt_one_conway_game.get_active_cubes())}")
+    print(f"Part two: {len(pt_two_conway_game.get_active_cubes())}")
