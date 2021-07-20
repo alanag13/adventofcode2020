@@ -3,23 +3,31 @@ from os import path
 this_dir = path.dirname(path.realpath(__file__))
 input_file = path.join(this_dir, "input.txt")
 
-def calc(grouped_equation_arr):
-    rolling_sum = 0
-    i = 0
-    while i < len(grouped_equation_arr) - 2:
-        first, op, second = rolling_sum or grouped_equation_arr[i], grouped_equation_arr[i+1], grouped_equation_arr[i+2]
-        if type(first) == list:
-            first = calc(first)
-        if type(second) == list:
-            second = calc(second)
+def calc(grouped_equation_arr, op_order):
+    answer = 0
+  
+    for op_group in op_order:
+        i = 1
+        while i < len(grouped_equation_arr):
+            first, op, second = grouped_equation_arr[i-1], grouped_equation_arr[i], grouped_equation_arr[i+1]
 
-        if op == "+":
-            rolling_sum = (int(first) + int(second))
-        elif op == "*":
-            rolling_sum = (int(first) * int(second))
+            if op not in op_group:
+                i += 2
+                continue
 
-        i += 2
-    return rolling_sum
+            if type(first) == list:
+                first = calc(first, op_order)
+            if type(second) == list:
+                second = calc(second, op_order)
+
+            if op == "+":
+                answer = (int(first) + int(second))
+            else:
+                answer = (int(first) * int(second))
+
+            grouped_equation_arr = grouped_equation_arr[:i-1] + [answer] + grouped_equation_arr[i+2:]
+
+    return answer
 
 
 def group_terms(equation_arr):
@@ -35,12 +43,12 @@ def group_terms(equation_arr):
 
         expression.append(char)
         
-        if parens == 0:
-            if len(expression) == 1:
-                terms.append(expression[0])
-            else:
-                terms.append(group_terms(expression[1:len(expression)-1]))
-            expression = []
+        if parens:
+            continue
+
+        new_term = expression[0] if len(expression) == 1 else group_terms(expression[1:len(expression)-1])
+        terms.append(new_term)
+        expression = []
 
     return terms
 
@@ -49,10 +57,12 @@ def group_terms(equation_arr):
 with open(input_file) as f:
     lines = [line.strip() for line in f.readlines()]
     part_one = 0
+    part_two = 0
     for line in lines:
         parts = []
         for part in line.split(" "):
             parts.extend(list(part))
-        answer = calc(group_terms(parts))
-        part_one += answer
-    print(part_one)
+        part_one += calc(group_terms(parts), ["+*"])
+        part_two += calc(group_terms(parts), ["+", "*"])
+    print(f"Part one: {part_one}")
+    print(f"Part two: {part_two}")
