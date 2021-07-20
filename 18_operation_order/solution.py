@@ -3,13 +3,13 @@ from os import path
 this_dir = path.dirname(path.realpath(__file__))
 input_file = path.join(this_dir, "input.txt")
 
-def calc(grouped_equation_arr, op_order):
+def calc(math_tokens, op_order):
     answer = 0
   
     for op_group in op_order:
         i = 1
-        while i < len(grouped_equation_arr):
-            first, op, second = grouped_equation_arr[i-1], grouped_equation_arr[i], grouped_equation_arr[i+1]
+        while i < len(math_tokens):
+            first, op, second = math_tokens[i-1], math_tokens[i], math_tokens[i+1]
 
             if op not in op_group:
                 i += 2
@@ -25,7 +25,7 @@ def calc(grouped_equation_arr, op_order):
             else:
                 answer = (int(first) * int(second))
 
-            grouped_equation_arr = grouped_equation_arr[:i-1] + [answer] + grouped_equation_arr[i+2:]
+            math_tokens = math_tokens[:i-1] + [answer] + math_tokens[i+2:]
 
     return answer
 
